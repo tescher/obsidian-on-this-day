@@ -58,6 +58,7 @@ export default class OnThisDayPlugin extends Plugin {
 
     private isDailyNote(note: TFile): boolean {
         return (
+            note.extension === "md" &&
             note.path.startsWith(this.folder) &&
             moment(note.basename, this.format).isValid()
         );
