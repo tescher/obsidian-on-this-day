@@ -179,26 +179,33 @@ export default class OnThisDayPlugin extends Plugin {
 }
 
 function getDateFromBasename(basename: string): moment.Moment {
-    const defaultInvalid = moment.invalid(); // <— always return this if no match
+    const patterns: { regex: RegExp; format: string }[] = [
+        // 2023-04-02
+        { regex: /\d{4}-\d{2}-\d{2}/, format: "YYYY-MM-DD" },
 
-    const patterns = [
-        { regex: /(\d{4}-\d{2}-\d{2})/, format: "YYYY-MM-DD" },
+        // April 02, 2023 / April 2, 2023
         {
-            regex: /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s*\d{4}\b/i,
+            regex: /(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s*\d{4}/i,
             format: "MMMM D, YYYY",
         },
-        { regex: /(\d{1,2}_\d{1,2}_\d{2})/, format: "M_D_YY" },
+
+        // 4_02_23, 04_2_23, etc.
+        { regex: /\d{1,2}_\d{1,2}_\d{2}/, format: "M_D_YY" },
     ];
 
     for (const { regex, format } of patterns) {
         const match = basename.match(regex);
-        if (match) {
-            const m = moment(match[0], format, true);
-            if (m.isValid()) return m;
+        if (match && match[0]) {
+            const dateStr = match[0];
+            const m = moment(dateStr, format, true); // strict parse
+            if (m.isValid()) {
+                return m;
+            }
         }
     }
 
-    return defaultInvalid;
+    // Always return a Moment so downstream code never sees null
+    return moment.invalid();
 }
 
 
