@@ -48,7 +48,7 @@ export default class OnThisDayPlugin extends Plugin {
     private get currentDate(): moment.Moment {
         const currentNote = this.app.workspace.getActiveFile();
         return currentNote && this.isDailyNote(currentNote)
-            ? moment(currentNote.basename, this.format)
+            ? getDateFromBasename(currentNote.basename)
             : moment();
     }
 
@@ -60,7 +60,7 @@ export default class OnThisDayPlugin extends Plugin {
         return (
             note.extension === "md" &&
             note.path.startsWith(this.folder) &&
-            moment(note.basename, this.format).isValid()
+            getDateFromBasename(note.basename).isValid()
         );
     }
 
@@ -72,7 +72,7 @@ export default class OnThisDayPlugin extends Plugin {
             .filter((note) => this.isDailyNote(note))
             .map((note) => ({
                 note,
-                date: moment(note.basename, format),
+                date: getDateFromBasename(note.basename),
             }))
             .filter(({ date }) => {
                 return (
