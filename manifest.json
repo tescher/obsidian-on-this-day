@@ -1,10 +1,10 @@
 {
-    "id": "on-this-day",
-    "name": "On This Day",
-    "version": "2.0.3",
+    "id": "on-this-day-expanded",
+    "name": "On This Day Expanded",
+    "version": "2.0.3-fork",
     "minAppVersion": "0.15.0",
-    "description": "Show your daily notes from this day in a simple panel view.",
-    "author": "Jose Elias Alvarez",
+    "description": "Show your daily notes from this day in a simple panel view. Escher expanded with additional date formats",
+    "author": "Jose Elias Alvarez + Tim Escher",
     "authorUrl": "https://github.com/jose-elias-alvarez",
     "isDesktopOnly": false
 }

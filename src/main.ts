@@ -177,3 +177,29 @@ export default class OnThisDayPlugin extends Plugin {
         await this.saveData(this.settings);
     }
 }
+
+function getDateFromBasename(basename: string): moment.Moment {
+    const defaultInvalid = moment.invalid(); // <— always return this if no match
+
+    const patterns = [
+        { regex: /(\d{4}-\d{2}-\d{2})/, format: "YYYY-MM-DD" },
+        {
+            regex: /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s*\d{4}\b/i,
+            format: "MMMM D, YYYY",
+        },
+        { regex: /(\d{1,2}_\d{1,2}_\d{2})/, format: "M_D_YY" },
+    ];
+
+    for (const { regex, format } of patterns) {
+        const match = basename.match(regex);
+        if (match) {
+            const m = moment(match[0], format, true);
+            if (m.isValid()) return m;
+        }
+    }
+
+    return defaultInvalid;
+}
+
+
+
